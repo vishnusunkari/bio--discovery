@@ -1,0 +1,27 @@
+DESCRIPTION:
+
+The Core implementation is spread across all the java classes inside package org.biodiscovery.prj.
+
+Basic idea is to store the huge file into multiple files on disk and then query individual files as
+needed according to the query string.
+
+When saving this huge file into multiple files I am using the chromosome number ie the first column of the
+data line as the filename.  In this case I am assuming all the chromosome numbers would be in the form of
+chr+#(number).  This would enable me to iterate through multiple files when query is in the form of
+eg chr3:5000-chr5:8000.
+
+While persisting data of huge file onto disk.  I am using java streams api for performance and I am reading
+the file, storing into buffer until I come across a different chromosome than the previous one.  As soon as
+I come across a different chromosome, I am writing the file.  This approach will give a lot of performance
+instead of writing the file for each line.
+
+While searching the data inside a single file, its pretty straightforward to search for the first column
+value and load into buffer all the values until the second column value and then write to an output file
+named "Results.txt".  I have also embedded in the code to print the output data on to console using
+StringBuilder as well.
+
+While search the data inside multiple files, I have categorized the search into 3 parts: 1st is to search
+the first file line by line until my first column value matches and then printing all the intermediate
+files without any checks and then the last file searching line by line until my second column value is
+matched.
+
